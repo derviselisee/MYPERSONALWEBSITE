@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Campesse Gonzreu — Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+/* ══════════════════════════════════════
+   VARIABLES & RESET
+══════════════════════════════════════ */
+:root{
+  --navy:#0a1f44;--navy2:#0d2654;--navy3:#1a3a6b;
+  --blue:#1976d2;--blue-l:#42a5f5;--blue-g:rgba(25,118,210,.12);
+  --white:#ffffff;--bg:#f0f4ff;--bg2:#e3ecff;
+  --card:#ffffff;--card-b:rgba(10,31,68,.1);--card-hov:#f5f8ff;
+  --txt:#0a1f44;--txt2:#2d4170;--txt3:#6b7a99;--txt4:#a0aec0;
+  --grn:#0a7c4f;--grn-l:#10b981;--grn-g:rgba(10,124,79,.1);
+  --red:#c62828;--red-l:#ef5350;--red-g:rgba(198,40,40,.1);
+  --ylw:#b45309;--ylw-g:rgba(180,83,9,.1);
+  --pur:#5b21b6;--pur-g:rgba(91,33,182,.1);
+  --gold:#d4a853;
+  --nav-w:268px;
+  --sh:0 2px 12px rgba(10,31,68,.08),0 1px 3px rgba(10,31,68,.05);
+  --sh-lg:0 8px 32px rgba(10,31,68,.14);
+  --r:12px;--r-lg:16px;
+  --transition:background .25s,color .25s,border-color .25s;
+}
+[data-dark]{
+  --bg:#07111f;--bg2:#0b1929;
+  --card:#0d1f35;--card-b:rgba(255,255,255,.08);--card-hov:#102238;
+  --txt:#e8eef8;--txt2:#b0c4de;--txt3:#6b8aaa;--txt4:#3d5a78;
+  --navy:#04101e;--navy2:#071626;--navy3:#0d2040;
+  --blue:#42a5f5;--blue-l:#90caf9;--blue-g:rgba(66,165,245,.12);
+  --grn:#10b981;--grn-l:#34d399;--grn-g:rgba(16,185,129,.1);
+  --red:#ef5350;--red-l:#ef9a9a;--red-g:rgba(239,83,80,.1);
+  --ylw:#f59e0b;--ylw-g:rgba(245,158,11,.1);
+  --pur:#8b5cf6;--pur-g:rgba(139,92,246,.1);
+  --sh:0 2px 12px rgba(0,0,0,.3),0 1px 3px rgba(0,0,0,.2);
+  --sh-lg:0 8px 32px rgba(0,0,0,.4);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;overflow-x:hidden;transition:var(--transition)}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--blue-g);border-radius:4px}
+
+/* ══════════════════════════════════════
+   LAYOUT
+══════════════════════════════════════ */
+.layout{display:flex;min-height:100vh}
+.sidebar{width:var(--nav-w);background:var(--navy);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;overflow-y:auto;z-index:100;border-right:1px solid rgba(255,255,255,.06);transition:var(--transition)}
+.main{margin-left:var(--nav-w);flex:1;min-height:100vh;padding:32px 36px 80px}
+
+/* ══════════════════════════════════════
+   SIDEBAR
+══════════════════════════════════════ */
+.sb-top{padding:24px 20px;border-bottom:1px solid rgba(255,255,255,.07);position:relative;overflow:hidden}
+.sb-top::before{content:'';position:absolute;top:-40px;left:50%;transform:translateX(-50%);width:180px;height:180px;background:radial-gradient(circle,rgba(66,165,245,.1) 0%,transparent 70%);pointer-events:none}
+.pic-wrap{position:relative;display:inline-block;margin-bottom:12px}
+.pro-pic{width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid var(--blue);display:block;cursor:pointer;transition:transform .2s;animation:popIn .4s cubic-bezier(.34,1.56,.64,1)}
+.pro-pic:hover{transform:scale(1.06)}
+@keyframes popIn{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+.pic-ring{position:absolute;inset:-5px;border-radius:50%;border:2px solid transparent;border-top-color:var(--grn);border-right-color:var(--grn);animation:spin 3s linear infinite;pointer-events:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+.pic-edit{position:absolute;bottom:2px;right:2px;width:24px;height:24px;background:var(--blue);border-radius:50%;border:2px solid var(--navy);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff}
+.sb-name{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:#fff;line-height:1.3}
+.sb-deg{font-size:10.5px;color:var(--blue-l);font-weight:600;margin-top:2px}
+.sb-school{font-size:10px;color:rgba(255,255,255,.4);margin-top:2px}
+.sb-id{font-size:9px;color:rgba(255,255,255,.25);margin-top:4px}
+.certs{display:flex;gap:4px;flex-wrap:wrap;margin-top:8px}
+.cert{font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;border:1px solid}
+.c-bl{background:rgba(66,165,245,.14);color:#90caf9;border-color:rgba(66,165,245,.3)}
+.c-gr{background:rgba(16,185,129,.14);color:#6ee7b7;border-color:rgba(16,185,129,.3)}
+.c-go{background:rgba(245,158,11,.14);color:#fcd34d;border-color:rgba(245,158,11,.3)}
+
+.nav{padding:14px 12px;flex:1}
+.nav-gl{font-size:9px;font-weight:700;color:rgba(255,255,255,.2);text-transform:uppercase;letter-spacing:.12em;padding:0 10px;margin:14px 0 5px}
+.nav-i{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:10px;cursor:pointer;font-size:13px;font-weight:500;color:rgba(255,255,255,.55);transition:all .18s;margin-bottom:1px;border:1px solid transparent;text-decoration:none}
+.nav-i:hover{background:rgba(255,255,255,.07);color:#fff}
+.nav-i.active{background:linear-gradient(135deg,rgba(25,118,210,.22),rgba(13,38,84,.5));color:#fff;border-color:rgba(66,165,245,.22)}
+.nav-ico{font-size:15px;width:22px;text-align:center}
+.nav-badge{margin-left:auto;font-size:10px;font-weight:700;background:var(--red);color:#fff;border-radius:20px;padding:1px 7px}
+
+.sb-links{padding:10px 12px;border-top:1px solid rgba(255,255,255,.06)}
+.sb-gl{font-size:9px;font-weight:700;color:rgba(255,255,255,.2);text-transform:uppercase;letter-spacing:.12em;padding:0 6px;margin-bottom:7px}
+.ql{display:flex;align-items:center;gap:9px;padding:8px 11px;border-radius:9px;font-size:12px;font-weight:500;margin-bottom:3px;cursor:pointer;transition:all .18s;border:1px solid rgba(255,255,255,.06);text-decoration:none;background:rgba(255,255,255,.04);color:rgba(255,255,255,.65)}
+.ql:hover{transform:translateX(3px);background:rgba(255,255,255,.08);color:#fff}
+.ql-ico{width:24px;height:24px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+
+.theme-row{margin:8px 12px 14px;display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:10px;cursor:pointer;font-size:11.5px;color:rgba(255,255,255,.5)}
+.pill-tgl{width:32px;height:18px;background:rgba(255,255,255,.15);border-radius:10px;position:relative;transition:background .3s}
+.pill-tgl.on{background:var(--blue)}
+.pill-tgl::after{content:'';position:absolute;width:12px;height:12px;background:#fff;border-radius:50%;top:3px;left:3px;transition:left .3s}
+.pill-tgl.on::after{left:17px}
+
+/* ══════════════════════════════════════
+   SECTIONS
+══════════════════════════════════════ */
+.sec{display:none;animation:fadeUp .22s ease}.sec.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.pg-hd{margin-bottom:26px}
+.pg-t{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:var(--txt)}
+.pg-s{font-size:13px;color:var(--txt3);margin-top:4px}
+
+/* ══════════════════════════════════════
+   CARDS & GRIDS
+══════════════════════════════════════ */
+.card{background:var(--card);border:1px solid var(--card-b);border-radius:var(--r-lg);padding:20px 22px;box-shadow:var(--sh);transition:var(--transition)}
+.card:hover{box-shadow:var(--sh-lg)}
+.ch{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:16px;display:flex;align-items:center;gap:7px}
+.chi{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;background:var(--blue-g);flex-shrink:0}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.mb18{margin-bottom:18px}
+
+/* ══════════════════════════════════════
+   METRICS
+══════════════════════════════════════ */
+.metric{background:var(--card);border:1px solid var(--card-b);border-radius:var(--r-lg);padding:16px 18px;box-shadow:var(--sh);position:relative;overflow:hidden;transition:var(--transition)}
+.metric::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:var(--r-lg) var(--r-lg) 0 0}
+.m-bl::before{background:linear-gradient(90deg,var(--blue),var(--blue-l))}
+.m-gr::before{background:linear-gradient(90deg,var(--grn),var(--grn-l))}
+.m-yl::before{background:linear-gradient(90deg,var(--ylw),#f59e0b)}
+.m-rd::before{background:linear-gradient(90deg,var(--red),var(--red-l))}
+.m-pu::before{background:linear-gradient(90deg,var(--pur),#8b5cf6)}
+.mv{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;line-height:1;margin-bottom:5px}
+.mv.bl{color:var(--blue)}.mv.gr{color:var(--grn)}.mv.yl{color:var(--ylw)}.mv.rd{color:var(--red)}.mv.pu{color:var(--pur)}
+.ml{font-size:11px;color:var(--txt3);font-weight:500}
+
+/* ══════════════════════════════════════
+   BUTTONS & FORMS
+══════════════════════════════════════ */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .18s;font-family:'DM Sans',sans-serif}
+.btn:hover{transform:translateY(-1px)}.btn:active{transform:translateY(0)}
+.b-nv{background:var(--navy);color:#fff;box-shadow:0 4px 14px rgba(10,31,68,.35)}
+.b-nv:hover{background:var(--navy3)}
+.b-bl{background:var(--blue);color:#fff;box-shadow:0 4px 14px rgba(25,118,210,.3)}
+.b-bl:hover{background:var(--blue-l);box-shadow:0 6px 20px rgba(25,118,210,.4)}
+.b-gr{background:var(--grn);color:#fff;box-shadow:0 4px 14px rgba(10,124,79,.25)}
+.b-gr:hover{background:var(--grn-l)}
+.b-rd{background:var(--red);color:#fff}
+.b-o{background:transparent;border:1.5px solid var(--card-b);color:var(--txt2)}
+.b-o:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-g)}
+.btn-sm{padding:6px 13px;font-size:12px}
+.btn-xs{padding:4px 9px;font-size:11px;border-radius:7px}
+.fg{margin-bottom:12px}
+.fg label{font-size:11.5px;font-weight:600;color:var(--txt3);display:block;margin-bottom:4px}
+input,select,textarea{background:var(--bg2);border:1.5px solid var(--card-b);border-radius:9px;padding:9px 13px;color:var(--txt);font-size:13px;font-family:'DM Sans',sans-serif;width:100%;transition:border-color .2s,box-shadow .2s;outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-g)}
+input::placeholder{color:var(--txt4)}
+select option{background:var(--bg)}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fr3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+
+/* ══════════════════════════════════════
+   TABLE
+══════════════════════════════════════ */
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{text-align:left;font-size:10px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:.08em;padding:8px 12px;border-bottom:1.5px solid var(--card-b)}
+.tbl td{padding:11px 12px;font-size:13px;border-bottom:1px solid var(--card-b);color:var(--txt2)}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tbody tr:hover td{background:var(--card-hov)}
+.gi{background:transparent;border:1px solid transparent;border-radius:6px;padding:4px 8px;width:80px;font-size:13px;color:var(--txt);text-align:center}
+.gi:focus{background:var(--bg2);border-color:var(--blue);box-shadow:0 0 0 2px var(--blue-g)}
+.sb{font-size:9px;font-weight:700;padding:3px 8px;border-radius:20px;display:inline-block;text-transform:uppercase;letter-spacing:.05em}
+.sb-g{background:var(--grn-g);color:var(--grn);border:1px solid rgba(10,124,79,.2)}
+.sb-y{background:var(--ylw-g);color:var(--ylw);border:1px solid rgba(180,83,9,.2)}
+.sb-b{background:var(--blue-g);color:var(--blue);border:1px solid rgba(25,118,210,.2)}
+.sb-r{background:var(--red-g);color:var(--red);border:1px solid rgba(198,40,40,.2)}
+
+/* ══════════════════════════════════════
+   SEMESTER TABS
+══════════════════════════════════════ */
+.sem-tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:18px}
+.sem-t{padding:7px 16px;border-radius:20px;font-size:12.5px;font-weight:600;cursor:pointer;border:1.5px solid var(--card-b);color:var(--txt3);background:var(--card);transition:all .18s;font-family:'DM Sans',sans-serif}
+.sem-t.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+.sem-t:hover:not(.active){border-color:var(--blue);color:var(--blue)}
+.gpa-big{font-family:'Syne',sans-serif;font-size:36px;font-weight:800;color:var(--blue)}
+.gpa-bar{height:5px;background:var(--bg2);border-radius:3px;overflow:hidden;margin-top:8px;width:100%}
+.gpa-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--blue-l));border-radius:3px;transition:width .5s ease}
+
+/* ══════════════════════════════════════
+   TASKS
+══════════════════════════════════════ */
+.ti{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--card-b)}
+.ti:last-child{border-bottom:none}
+.tchk{width:19px;height:19px;border-radius:50%;border:2px solid var(--card-b);cursor:pointer;flex-shrink:0;margin-top:1px;transition:all .18s;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700}
+.tchk.done{background:var(--grn);border-color:var(--grn);color:#fff}
+.tn{font-size:13px;font-weight:500;color:var(--txt)}.tn.done{text-decoration:line-through;opacity:.45}
+.tm{font-size:11px;color:var(--txt3);margin-top:2px}
+.p-hi{color:var(--red);font-weight:600}.p-me{color:var(--ylw);font-weight:600}.p-lo{color:var(--grn);font-weight:600}
+.del-b{background:none;border:none;cursor:pointer;color:var(--txt4);font-size:14px;padding:3px 6px;border-radius:5px;transition:all .15s;line-height:1}
+.del-b:hover{background:var(--red-g);color:var(--red)}
+
+/* ══════════════════════════════════════
+   SHIFTS
+══════════════════════════════════════ */
+.shr{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid var(--card-b)}
+.shr:last-child{border-bottom:none}
+.sj{font-size:13px;font-weight:600;color:var(--txt)}
+.sd{font-size:11px;color:var(--txt3);margin-top:2px}
+.sp{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--grn)}
+
+/* ══════════════════════════════════════
+   CALENDAR
+══════════════════════════════════════ */
+.cal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.cal-ml{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--txt)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cal-dl{text-align:center;font-size:10px;color:var(--txt3);padding:4px 2px;font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.cal-d{aspect-ratio:1;border-radius:9px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:4px 2px;font-size:12px;cursor:pointer;transition:background .15s;border:1.5px solid transparent;min-height:40px}
+.cal-d:hover{background:var(--blue-g);border-color:rgba(25,118,210,.2)}
+.cal-d.today{border-color:var(--blue);background:var(--blue-g)}
+.cal-d.other{opacity:.3}
+.cal-dn{font-size:12px;font-weight:600;color:var(--txt)}
+.cal-dots{display:flex;gap:2px;flex-wrap:wrap;justify-content:center;margin-top:2px}
+.cal-dot{width:5px;height:5px;border-radius:50%}
+
+/* ══════════════════════════════════════
+   SCHEDULE ITEMS
+══════════════════════════════════════ */
+.si{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--card-b)}
+.si:last-child{border-bottom:none}
+.si-t{font-size:10px;color:var(--txt3);min-width:90px;text-align:right;font-weight:600}
+.si-bar{width:3px;height:36px;border-radius:2px;flex-shrink:0}
+.si-n{font-size:13.5px;font-weight:600;color:var(--txt)}
+.si-s{font-size:11px;color:var(--txt3);margin-top:2px}
+
+/* ══════════════════════════════════════
+   STUDY CLOCK
+══════════════════════════════════════ */
+.clk{font-family:'Syne',sans-serif;font-size:46px;font-weight:800;color:var(--blue);letter-spacing:.04em;margin:16px 0 8px}
+
+/* ══════════════════════════════════════
+   EARNINGS ESTIMATOR
+══════════════════════════════════════ */
+.earn-box{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px}
+.earn-card{border-radius:12px;padding:14px;text-align:center;transition:var(--transition)}
+.earn-lbl{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+.earn-val{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;transition:transform .15s}
+.proj-row{background:var(--bg2);border-radius:9px;padding:10px 14px;font-size:12px;color:var(--txt3);display:flex;gap:18px;flex-wrap:wrap;margin-bottom:14px}
+
+/* ══════════════════════════════════════
+   WEEKLY BARS
+══════════════════════════════════════ */
+.wb-wrap{margin-bottom:8px}
+.wb-lbl{display:flex;justify-content:space-between;font-size:11px;color:var(--txt3);margin-bottom:3px}
+.wb{background:var(--bg2);border-radius:4px;height:7px;overflow:hidden}
+.wb-fill{height:100%;border-radius:4px;transition:width .5s ease}
+
+/* ══════════════════════════════════════
+   NOTIFICATION
+══════════════════════════════════════ */
+#notifPop{position:fixed;top:20px;right:20px;background:var(--navy);color:#fff;padding:12px 20px;border-radius:10px;font-size:13px;font-weight:600;z-index:9999;display:none;box-shadow:var(--sh-lg);border-left:3px solid var(--blue-l);animation:slideIn .2s ease}
+@keyframes slideIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ══════════════════════════════════════
+   PICTURE MODAL
+══════════════════════════════════════ */
+#picModal{display:none;position:fixed;inset:0;z-index:200;background:rgba(7,17,31,.7);backdrop-filter:blur(4px);align-items:center;justify-content:center}
+#picModal.open{display:flex}
+.modal-box{background:var(--card);border-radius:var(--r-lg);padding:28px;width:100%;max-width:360px;box-shadow:var(--sh-lg)}
+.modal-box h3{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;margin-bottom:16px;color:var(--txt)}
+
+/* ══════════════════════════════════════
+   MUSIC PLAYER
+══════════════════════════════════════ */
+#musicFab{position:fixed;bottom:24px;right:24px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#1db954,#17a845);color:#fff;border:none;cursor:pointer;z-index:700;font-size:22px;box-shadow:0 4px 20px rgba(29,185,84,.5);transition:all .2s;display:flex;align-items:center;justify-content:center}
+#musicFab:hover{transform:scale(1.1);box-shadow:0 6px 28px rgba(29,185,84,.65)}
+#musicPanel{position:fixed;bottom:92px;right:24px;width:340px;background:#121212;border-radius:18px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.07);display:none;z-index:700;font-family:'DM Sans',sans-serif;animation:spSlide .22s ease}
+@keyframes spSlide{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ══════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════ */
+@media(max-width:900px){
+  .sidebar{width:220px}
+  .main{margin-left:220px;padding:20px 16px 80px}
+  .g4{grid-template-columns:1fr 1fr}
+}
+@media(max-width:640px){
+  .sidebar{display:none}
+  .main{margin-left:0}
+  .g4,.g2,.g3{grid-template-columns:1fr}
+  .fr,.fr3{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div id="notifPop"></div>
+
+<!-- ════════════════════════════════════════
+     PIC MODAL
+════════════════════════════════════════ -->
+<div id="picModal">
+  <div class="modal-box">
+    <h3>📷 Profile Photo</h3>
+    <div class="fg"><label>Upload Photo</label><input type="file" id="picFile" accept="image/*" onchange="handlePicFile(event)"/></div>
+    <div style="display:flex;gap:10px;margin-top:4px">
+      <button class="btn b-bl btn-sm" onclick="savePic()">Save</button>
+      <button class="btn b-rd btn-sm" onclick="deletePic()">Remove</button>
+      <button class="btn b-o btn-sm" onclick="closePicModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SIDEBAR
+════════════════════════════════════════ -->
+<aside class="sidebar">
+  <div class="sb-top" style="text-align:center">
+    <div class="pic-wrap">
+      <img id="proImg" class="pro-pic" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%230a1f44'/%3E%3Ctext x='50' y='66' text-anchor='middle' font-size='36' fill='%231976d2' font-family='Arial' font-weight='bold'%3ECG%3C/text%3E%3C/svg%3E" onclick="openPicModal()"/>
+      <div class="pic-ring"></div>
+      <div class="pic-edit" onclick="openPicModal()">✎</div>
+    </div>
+    <div class="sb-name">Campesse Elisee Dervis Gonzreu</div>
+    <div class="sb-deg">B.S. Info Tech / Cybersecurity</div>
+    <div class="sb-school">Wright State University · Dayton, OH</div>
+    <div class="sb-id">U01156799 · Fall 2026</div>
+    <div class="certs">
+      <span class="cert c-bl">CCNA</span>
+      <span class="cert c-gr">Security+</span>
+      <span class="cert c-go">A+</span>
+      <span class="cert c-go">Net+</span>
+    </div>
+  </div>
+
+  <nav class="nav">
+    <div class="nav-gl">Overview</div>
+    <div class="nav-i active" onclick="go('dashboard',this)"><span class="nav-ico">🏠</span>Dashboard</div>
+    <div class="nav-i" onclick="go('schedule',this)"><span class="nav-ico">📅</span>Schedule</div>
+    <div class="nav-i" onclick="go('calendar',this)"><span class="nav-ico">🗓</span>Calendar</div>
+    <div class="nav-gl">Academics</div>
+    <div class="nav-i" onclick="go('grades',this)"><span class="nav-ico">📚</span>Classes &amp; Grades</div>
+    <div class="nav-i" onclick="go('tasks',this)"><span class="nav-ico">✅</span>Tasks <span class="nav-badge" id="tBadge">0</span></div>
+    <div class="nav-i" onclick="go('study',this)"><span class="nav-ico">⏱</span>Study Tracker</div>
+    <div class="nav-gl">Work &amp; Finance</div>
+    <div class="nav-i" onclick="go('work',this)"><span class="nav-ico">💼</span>Work &amp; Earnings</div>
+  </nav>
+
+  <div class="sb-links">
+    <div class="sb-gl">Quick Access</div>
+    <a class="ql" href="https://pilot.wright.edu/d2l/home" target="_blank"><div class="ql-ico" style="background:rgba(66,165,245,.18)">🎓</div>Pilot (WSU)</a>
+    <a class="ql" href="https://outlook.cloud.microsoft/host/377c982d-9686-450e-9a7c-22aeaf1bc162/7211f19f-262a-42eb-a02e-289956491741" target="_blank"><div class="ql-ico" style="background:rgba(0,120,212,.18)">☁️</div>OneDrive</a>
+    <a class="ql" href="https://github.com/derviselisee?tab=repositories" target="_blank"><div class="ql-ico" style="background:rgba(255,255,255,.1)">🐙</div>GitHub</a>
+    <a class="ql" href="https://secure.chase.com/web/auth/dashboard" target="_blank"><div class="ql-ico" style="background:rgba(0,85,153,.2)">🏦</div>Chase Bank</a>
+    <div class="ql" onclick="toggleMusic()" style="color:#1db954"><div class="ql-ico" style="background:rgba(29,185,84,.18)">🎵</div>Music Player</div>
+  </div>
+
+  <div class="theme-row" onclick="toggleTheme()">
+    <span id="thmLbl">🌙 Dark Mode</span>
+    <div class="pill-tgl" id="thmPill"></div>
+  </div>
+</aside>
+
+<!-- ════════════════════════════════════════
+     MAIN CONTENT
+════════════════════════════════════════ -->
+<main class="main">
+
+<!-- ── DASHBOARD ── -->
+<div class="sec active" id="sec-dashboard">
+  <div class="pg-hd">
+    <div class="pg-t" id="greetMsg">Good morning, Campesse 👋</div>
+    <div class="pg-s" id="dateLbl"></div>
+  </div>
+  <div class="g4 mb18">
+    <div class="metric m-bl"><div class="mv bl" id="d-gpa">—</div><div class="ml">Cumulative GPA</div></div>
+    <div class="metric m-gr"><div class="mv gr" id="d-earn">$0.00</div><div class="ml">Week Net Earnings</div></div>
+    <div class="metric m-yl"><div class="mv yl" id="d-study">0h</div><div class="ml">Study Hrs This Week</div></div>
+    <div class="metric m-rd"><div class="mv rd" id="d-tasks">0</div><div class="ml">Tasks Pending</div></div>
+  </div>
+  <div class="mb18">
+    <div class="card">
+      <div class="ch"><div class="chi">📆</div>Today — Everything at a Glance</div>
+      <div id="todaySch"></div>
+    </div>
+  </div>
+  <div class="g2 mb18">
+    <div class="card">
+      <div class="ch"><div class="chi">🔔</div>Upcoming — All Tasks &amp; Events</div>
+      <div id="upRem"></div>
+    </div>
+    <div class="card">
+      <div class="ch"><div class="chi">📊</div>This Week's Work</div>
+      <div class="g3 mb18" id="wkCards" style="margin-bottom:14px"></div>
+      <div id="wkBars"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── SCHEDULE ── -->
+<div class="sec" id="sec-schedule">
+  <div class="pg-hd"><div class="pg-t">Weekly Schedule</div><div class="pg-s">Fall 2026 · Aug 25 – Dec 12, 2026 · Wright State University</div></div>
+  <div class="card mb18">
+    <div class="ch"><div class="chi">🏫</div>In-Person Classes</div>
+    <table class="tbl"><thead><tr><th>Course</th><th>Code</th><th>Days</th><th>Time</th><th>Location</th><th>Instructor</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Intro to Biological Anthropology</strong></td><td>ANTH 2100</td><td>Mon / Wed</td><td>9:05 – 10:00 AM</td><td>TBA</td><td>Valda Black</td></tr>
+      <tr><td><strong>Mobile Application Development</strong></td><td>CS 3170</td><td>Mon / Wed / Fri</td><td>1:25 – 2:20 PM</td><td>Russ Eng 355</td><td>James Anderson</td></tr>
+      <tr><td><strong>Technical Comm. for Engineers</strong></td><td>EGR 3350</td><td>Mon / Wed / Fri</td><td>3:35 – 5:00 PM</td><td>TBA</td><td>Kim Redick Mortenson</td></tr>
+    </tbody></table>
+  </div>
+  <div class="card">
+    <div class="ch"><div class="chi">💻</div>Online / Async Classes</div>
+    <table class="tbl"><thead><tr><th>Course</th><th>Code</th><th>Format</th><th>Instructor</th><th>CRN</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Digital Forensics</strong></td><td>CEG 3410</td><td>Online</td><td>Dakota Johnson</td><td>88744</td></tr>
+      <tr><td><strong>Bio Anthropology Lab</strong></td><td>ANTH 2100L</td><td>Online</td><td>Lynsey Vlasek</td><td>82292</td></tr>
+      <tr><td><strong>Statistical Concepts</strong></td><td>STT 1600</td><td>Online</td><td>TBA</td><td>89567</td></tr>
+      <tr><td><strong>Technology and Society</strong></td><td>CS 1000</td><td>Online</td><td>Brent Richter</td><td>84648</td></tr>
+    </tbody></table>
+  </div>
+</div>
+
+<!-- ── CALENDAR ── -->
+<div class="sec" id="sec-calendar">
+  <div class="pg-hd"><div class="pg-t">Calendar</div><div class="pg-s">Classes, shifts, and tasks — all in one place</div></div>
+  <div class="g2">
+    <div class="card">
+      <div class="cal-hdr">
+        <button class="btn b-o btn-sm" onclick="calMv(-1)">‹</button>
+        <div class="cal-ml" id="calLbl"></div>
+        <button class="btn b-o btn-sm" onclick="calMv(1)">›</button>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+    </div>
+    <div>
+      <div class="card mb18">
+        <div class="ch"><div class="chi">📌</div><span id="selDLbl">Select a day</span></div>
+        <div id="dayEvts" style="font-size:13px;color:var(--txt3)">Click a date to see events.</div>
+      </div>
+      <div class="card">
+        <div class="ch"><div class="chi">+</div>Add Event</div>
+        <div class="fg"><label>Event Name</label><input id="eNm" placeholder="Study session, appointment..."/></div>
+        <div class="fr">
+          <div class="fg"><label>Date</label><input id="eDt" type="date"/></div>
+          <div class="fg"><label>Type</label><select id="eTy"><option value="other">Other</option><option value="task">Task</option><option value="reminder">Reminder</option></select></div>
+        </div>
+        <button class="btn b-bl btn-sm" onclick="addEvt()">+ Add Event</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── GRADES ── -->
+<div class="sec" id="sec-grades">
+  <div class="pg-hd" style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px">
+    <div><div class="pg-t">Classes &amp; Grades</div><div class="pg-s">All semesters · Live GPA calculation · Wright State University</div></div>
+    <div class="card" style="padding:16px 22px;text-align:center;min-width:130px">
+      <div class="gpa-big" id="gpaNum">4.0</div>
+      <div style="font-size:10px;color:var(--txt3);margin-top:3px;font-weight:700;letter-spacing:.08em;text-transform:uppercase">Cumulative GPA / 4.0</div>
+      <div class="gpa-bar"><div class="gpa-fill" id="gpaBar" style="width:100%"></div></div>
+    </div>
+  </div>
+  <div class="sem-tabs" id="semTabs"></div>
+  <div id="semBody"></div>
+  <div class="card" style="margin-top:18px">
+    <div class="ch"><div class="chi">+</div>Add Class</div>
+    <div class="fr">
+      <div class="fg"><label>Course Name</label><input id="nc-n" placeholder="Intro to Biology"/></div>
+      <div class="fg"><label>Course Code</label><input id="nc-c" placeholder="BIO 1010"/></div>
+    </div>
+    <div class="fr3">
+      <div class="fg"><label>Semester</label><select id="nc-s"><option>Spring 2026</option><option selected>Fall 2026</option></select></div>
+      <div class="fg"><label>Credits</label><input id="nc-cr" type="number" placeholder="3" min="0" max="6"/></div>
+      <div class="fg"><label>Status</label><select id="nc-st"><option>Registered</option><option>Waitlisted</option><option>Completed</option></select></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><label>Grade (optional)</label><input id="nc-g" placeholder="A, B+, 92..."/></div>
+    </div>
+    <button class="btn b-bl" onclick="addCls()">+ Add Class</button>
+  </div>
+</div>
+
+<!-- ── TASKS ── -->
+<div class="sec" id="sec-tasks">
+  <div class="pg-hd"><div class="pg-t">Tasks &amp; Reminders</div><div class="pg-s">Synced with your calendar automatically</div></div>
+  <div class="g2">
+    <div class="card">
+      <div class="ch"><div class="chi">✅</div>All Tasks</div>
+      <div id="taskList" style="font-size:13px;color:var(--txt3)">No tasks yet.</div>
+    </div>
+    <div class="card">
+      <div class="ch"><div class="chi">+</div>New Task</div>
+      <div class="fg"><label>Task Name</label><input id="tNm" placeholder="Study for CEG 3410 midterm"/></div>
+      <div class="fg"><label>Due Date &amp; Time</label><input id="tDt" type="datetime-local"/></div>
+      <div class="fr">
+        <div class="fg"><label>Course</label><input id="tCr" placeholder="CS 3170"/></div>
+        <div class="fg"><label>Priority</label><select id="tPr"><option value="high">🔴 High</option><option value="med" selected>🟡 Medium</option><option value="low">🟢 Low</option></select></div>
+      </div>
+      <button class="btn b-bl" onclick="addTask()">+ Add Task</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── STUDY ── -->
+<div class="sec" id="sec-study">
+  <div class="pg-hd"><div class="pg-t">Study Tracker</div><div class="pg-s">Clock in and out per course · Weekly totals</div></div>
+  <div class="g2">
+    <div class="card" style="text-align:center">
+      <div class="ch" style="justify-content:center"><div class="chi">⏱</div>Session Timer</div>
+      <div class="clk" id="studyClk">00:00:00</div>
+      <div style="font-size:12px;color:var(--txt3);margin-bottom:16px" id="studySt">Not studying</div>
+      <div class="fg" style="text-align:left"><label>Course</label>
+        <select id="studySel">
+          <option>CEG 3410 — Digital Forensics</option>
+          <option>CS 3170 — Mobile App Dev</option>
+          <option>ANTH 2100 — Bio Anthropology</option>
+          <option>EGR 3350 — Technical Comm.</option>
+          <option>STT 1600 — Statistics</option>
+          <option>CS 1000 — Tech &amp; Society</option>
+        </select>
+      </div>
+      <button class="btn b-gr" id="studyBtn" onclick="toggleStudy()" style="width:100%;justify-content:center">▶ Clock In</button>
+    </div>
+    <div class="card">
+      <div class="ch"><div class="chi">📊</div>This Week — <span id="studyTot" style="font-family:'Syne',sans-serif;font-weight:700;color:var(--blue)">0h 0m</span></div>
+      <div id="studyLog" style="font-size:13px;color:var(--txt3)">No sessions this week.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── WORK & EARNINGS ── -->
+<div class="sec" id="sec-work">
+  <div class="pg-hd"><div class="pg-t">Work &amp; Earnings</div><div class="pg-s">Manage jobs · Live earnings calculator · Payroll history</div></div>
+
+  <!-- Week metrics -->
+  <div class="g4 mb18">
+    <div class="metric m-gr"><div class="mv gr" id="w-gross">$0.00</div><div class="ml">Week Gross</div></div>
+    <div class="metric m-bl"><div class="mv bl" id="w-net">$0.00</div><div class="ml">Week Net</div></div>
+    <div class="metric m-yl"><div class="mv yl" id="w-hrs">0h</div><div class="ml">Hours Worked</div></div>
+    <div class="metric m-rd"><div class="mv rd" id="w-tax">$0.00</div><div class="ml">Est. Tax</div></div>
+  </div>
+
+  <!-- LIVE ESTIMATOR -->
+  <div class="card mb18" style="border:2px solid rgba(10,124,79,.2);background:linear-gradient(135deg,rgba(10,124,79,.04),rgba(25,118,210,.03))">
+    <div class="ch"><div class="chi" style="background:var(--grn-g);font-size:16px">⚡</div>Live Earnings Calculator — updates as you type</div>
+    <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:12px;margin-bottom:16px;align-items:end">
+      <div class="fg" style="margin-bottom:0"><label>Job</label><select id="sJob" onchange="syncRate()"></select></div>
+      <div class="fg" style="margin-bottom:0"><label>Hours Worked</label><input id="sHrs" type="number" placeholder="0" step="0.25" min="0" oninput="calcPrev()" style="font-size:18px;font-weight:700;text-align:center"/></div>
+      <div class="fg" style="margin-bottom:0"><label>Rate ($/hr)</label><input id="sRate" type="number" value="11" step="0.01" oninput="calcPrev()" style="font-weight:600;text-align:center"/></div>
+      <div class="fg" style="margin-bottom:0"><label>Tax (%)</label><input id="sTax" type="number" value="15" step="0.5" oninput="calcPrev()" style="font-weight:600;text-align:center"/></div>
+    </div>
+    <div class="earn-box">
+      <div class="earn-card" style="background:var(--grn-g);border:1.5px solid rgba(10,124,79,.2)">
+        <div class="earn-lbl" style="color:var(--grn)">Gross Pay</div>
+        <div class="earn-val" style="color:var(--grn)" id="pGross">$0.00</div>
+      </div>
+      <div class="earn-card" style="background:var(--red-g);border:1.5px solid rgba(198,40,40,.2)">
+        <div class="earn-lbl" style="color:var(--red)">Tax Withheld</div>
+        <div class="earn-val" style="color:var(--red)" id="pTax">-$0.00</div>
+      </div>
+      <div class="earn-card" style="background:var(--blue-g);border:1.5px solid rgba(25,118,210,.22)">
+        <div class="earn-lbl" style="color:var(--blue)">Net Pay ✓</div>
+        <div class="earn-val" style="color:var(--blue)" id="pNet">$0.00</div>
+      </div>
+    </div>
+    <div class="proj-row">
+      <span>Hourly net: <strong id="perHour" style="color:var(--txt)">—</strong></span>
+      <span>Daily (8h): <strong id="perDay" style="color:var(--txt)">—</strong></span>
+      <span>Weekly (40h): <strong id="perWeek" style="color:var(--txt)">—</strong></span>
+      <span>Monthly (173h): <strong id="perMonth" style="color:var(--txt)">—</strong></span>
+    </div>
+    <div style="display:flex;gap:10px;align-items:flex-end;padding-top:14px;border-top:1px solid var(--card-b)">
+      <div class="fg" style="margin-bottom:0;flex:1"><label>Date</label><input id="sDt" type="date"/></div>
+      <button class="btn b-gr" onclick="logShift()" style="white-space:nowrap">+ Log This Shift</button>
+    </div>
+  </div>
+
+  <div class="g2">
+    <!-- JOBS -->
+    <div class="card">
+      <div class="ch"><div class="chi">💼</div>My Jobs</div>
+      <div id="jobList" style="margin-bottom:16px"></div>
+      <div style="background:var(--bg2);border-radius:12px;padding:16px;border:1.5px dashed var(--card-b)">
+        <div style="font-size:10px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px">+ Add New Job</div>
+        <div class="fg"><label>Job Title</label><input id="njT" placeholder="e.g. Cashier at Target"/></div>
+        <div class="fr">
+          <div class="fg"><label>Pay Rate ($/hr)</label><input id="njR" type="number" placeholder="12.50" step="0.01"/></div>
+          <div class="fg"><label>Default Tax (%)</label><input id="njTax" type="number" placeholder="15" value="15" step="0.5"/></div>
+        </div>
+        <button class="btn b-nv" onclick="addJob()" style="width:100%;justify-content:center">+ Add Job</button>
+      </div>
+    </div>
+    <!-- SHIFT HISTORY -->
+    <div class="card">
+      <div class="ch"><div class="chi">📋</div>Shift History</div>
+      <div id="shiftList" style="color:var(--txt3);font-size:13px">No shifts logged yet.</div>
+    </div>
+  </div>
+</div>
+
+</main><!-- end main -->
+</div><!-- end layout -->
+
+<!-- ════════════════════════════════════════
+     SPOTIFY PLAYER
+════════════════════════════════════════ -->
+<button id="musicFab" onclick="toggleMusic()" title="Spotify">🎵</button>
+
+<div id="musicPanel">
+  <!-- Header -->
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#1a1a1a;border-bottom:1px solid rgba(255,255,255,.08)">
+    <div style="display:flex;align-items:center;gap:8px">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="#1db954"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+      <span style="font-size:11px;font-weight:700;color:#fff;letter-spacing:.08em">SPOTIFY</span>
+    </div>
+    <button onclick="toggleMusic()" style="background:none;border:none;color:#888;cursor:pointer;font-size:18px;line-height:1;padding:0 2px">✕</button>
+  </div>
+  <!-- Playlist switcher -->
+  <div style="padding:8px 12px;background:#181818;display:flex;gap:6px;border-bottom:1px solid rgba(255,255,255,.06)">
+    <button onclick="switchPlaylist(1)" id="pl1-btn" style="flex:1;background:#1db954;border:none;color:#000;border-radius:7px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">▶ Playlist 1</button>
+    <button onclick="switchPlaylist(2)" id="pl2-btn" style="flex:1;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:#bbb;border-radius:7px;padding:6px 10px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit">Playlist 2</button>
+  </div>
+  <!-- Embed -->
+  <iframe id="spFrame"
+    src="https://open.spotify.com/embed/playlist/6Zc9mti0fN8vjiXDMVlNdo?utm_source=generator&theme=0"
+    width="340" height="380" frameborder="0"
+    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+    style="display:block;border:none">
+  </iframe>
+</div>
+
+<!-- ════════════════════════════════════════
+     JAVASCRIPT — ONE CLEAN BLOCK
+════════════════════════════════════════ -->
+<script>
+// ── STATE ──────────────────────────────────────────────────────
+var S = JSON.parse(localStorage.getItem('cgDash6') || 'null') || {
+  tasks: [],
+  shifts: [],
+  events: [],
+  studySessions: [],
+  jobs: [{title:'Recreation Desk Assistant', rate:11, tax:15}],
+  semesters: {
+    'Spring 2026': [
+      {name:'Intro to Comp Programming', code:'CS 1160',  credits:4, grade:'A', status:'Completed'},
+      {name:'Business Calculus',         code:'MTH 2280', credits:4, grade:'A', status:'Completed'},
+      {name:'Introduction to Psychology',code:'PSY 1010', credits:4, grade:'A', status:'Completed'},
+      {name:'West & World Since 1500',   code:'HST 1200', credits:3, grade:'A', status:'Completed'},
+      {name:'Intro to Comp Prog Lab',    code:'CS 1160L', credits:0, grade:'A', status:'Completed'},
+      {name:'Psychology Lab',            code:'PSY 1010L',credits:0, grade:'A', status:'Completed'}
+    ],
+    'Fall 2026': [
+      {name:'Intro to Biological Anthropology', code:'ANTH 2100',  credits:4, grade:'', status:'Registered'},
+      {name:'Mobile Application Development',   code:'CS 3170',    credits:3, grade:'', status:'Registered'},
+      {name:'Technical Comm. for Engineers',     code:'EGR 3350',   credits:3, grade:'', status:'Registered'},
+      {name:'Digital Forensics',                 code:'CEG 3410',   credits:3, grade:'', status:'Registered'},
+      {name:'Bio Anthropology Lab',              code:'ANTH 2100L', credits:0, grade:'', status:'Registered'},
+      {name:'Statistical Concepts',              code:'STT 1600',   credits:3, grade:'', status:'Registered'},
+      {name:'Technology and Society',            code:'CS 1000',    credits:3, grade:'', status:'Registered'}
+    ]
+  }
+};
+var picTemp = null, isDark = false, calDate = new Date(),
+    studyOn = false, studyStart = null, studyInt = null,
+    activeSem = 'Fall 2026', musicOpen = false;
+
+function save(){ localStorage.setItem('cgDash6', JSON.stringify(S)); }
+
+// ── INIT ──────────────────────────────────────────────────────
+(function init(){
+  var now = new Date(), h = now.getHours();
+  document.getElementById('greetMsg').textContent =
+    (h<12?'Good morning':h<17?'Good afternoon':'Good evening') + ', Campesse 👋';
+  document.getElementById('dateLbl').textContent =
+    now.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  document.getElementById('sDt').value = now.toISOString().split('T')[0];
+  if(S.profilePic) document.getElementById('proImg').src = S.profilePic;
+  renderAll();
+})();
+
+function renderAll(){
+  renderDash(); renderCalendar(); renderGrades();
+  renderTasks(); renderShifts(); updateWork();
+  renderStudyLog(); updateBadge(); renderJobList();
+}
+
+// ── NAVIGATION ────────────────────────────────────────────────
+function go(id, el){
+  document.querySelectorAll('.sec').forEach(function(s){ s.classList.remove('active'); });
+  document.querySelectorAll('.nav-i').forEach(function(n){ n.classList.remove('active'); });
+  document.getElementById('sec-'+id).classList.add('active');
+  if(el) el.classList.add('active');
+  if(id==='grades')   { renderGrades(); }
+  if(id==='calendar') { renderCalendar(); }
+  if(id==='tasks')    { renderTasks(); }
+  if(id==='work')     { renderShifts(); updateWork(); renderJobList(); }
+  if(id==='study')    { renderStudyLog(); }
+  if(id==='dashboard'){ renderDash(); }
+}
+
+// ── THEME ─────────────────────────────────────────────────────
+function toggleTheme(){
+  isDark = !isDark;
+  document.documentElement.toggleAttribute('data-dark', isDark);
+  document.getElementById('thmPill').classList.toggle('on', isDark);
+  document.getElementById('thmLbl').textContent = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
+}
+
+// ── PROFILE PIC ───────────────────────────────────────────────
+function openPicModal(){ document.getElementById('picModal').classList.add('open'); }
+function closePicModal(){ document.getElementById('picModal').classList.remove('open'); picTemp=null; }
+function handlePicFile(e){
+  var f = e.target.files[0]; if(!f) return;
+  var r = new FileReader();
+  r.onload = function(ev){ picTemp=ev.target.result; document.getElementById('proImg').src=picTemp; };
+  r.readAsDataURL(f);
+}
+function savePic(){ if(picTemp){ S.profilePic=picTemp; save(); } closePicModal(); notify('Photo updated!'); }
+function deletePic(){
+  S.profilePic=null; save();
+  document.getElementById('proImg').src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%230a1f44'/%3E%3Ctext x='50' y='66' text-anchor='middle' font-size='36' fill='%231976d2' font-family='Arial' font-weight='bold'%3ECG%3C/text%3E%3C/svg%3E";
+  closePicModal(); notify('Photo removed.');
+}
+
+// ── GPA ───────────────────────────────────────────────────────
+var GP = {A:4.0,'A-':3.7,'B+':3.3,B:3.0,'B-':2.7,'C+':2.3,C:2.0,'C-':1.7,'D+':1.3,D:1.0,F:0.0};
+function toGP(g){
+  if(!g) return null;
+  var u = g.trim().toUpperCase();
+  if(GP[u]!==undefined) return GP[u];
+  var n = parseFloat(g); if(isNaN(n)) return null;
+  if(n>=93)return 4.0;if(n>=90)return 3.7;if(n>=87)return 3.3;if(n>=83)return 3.0;
+  if(n>=80)return 2.7;if(n>=77)return 2.3;if(n>=73)return 2.0;if(n>=70)return 1.7;
+  if(n>=67)return 1.3;if(n>=63)return 1.0;return 0.0;
+}
+function calcGPA(){
+  var p=0, c=0;
+  Object.values(S.semesters).forEach(function(sem){
+    sem.forEach(function(x){ var g=toGP(x.grade); if(g!==null&&x.credits>0){ p+=g*x.credits; c+=x.credits; } });
+  });
+  return c>0 ? (p/c).toFixed(2) : '—';
+}
+function updateGPA(){
+  var g = calcGPA();
+  ['gpaNum','d-gpa'].forEach(function(id){ var e=document.getElementById(id); if(e) e.textContent=g; });
+  var b=document.getElementById('gpaBar'); if(b) b.style.width=(g!=='—'?(parseFloat(g)/4*100):0)+'%';
+}
+
+// ── GRADES / CLASSES ──────────────────────────────────────────
+function renderGrades(){
+  var sems = Object.keys(S.semesters);
+  document.getElementById('semTabs').innerHTML =
+    sems.map(function(s){ return '<button class="sem-t '+(s===activeSem?'active':'')+'" onclick="switchSem(\''+s+'\',this)">'+s+'</button>'; }).join('') +
+    '<button class="sem-t" onclick="newSem()">+ Semester</button>';
+  renderSemBody(activeSem);
+  updateGPA();
+  // update add-class semester dropdown
+  var sel = document.getElementById('nc-s');
+  if(sel){ sel.innerHTML = sems.map(function(s){ return '<option'+(s===activeSem?' selected':'')+'>'+s+'</option>'; }).join(''); }
+}
+function switchSem(s, btn){
+  activeSem = s;
+  document.querySelectorAll('.sem-t').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  renderSemBody(s);
+}
+function renderSemBody(sem){
+  var cls = S.semesters[sem] || [];
+  var tc = cls.reduce(function(a,c){ return a+c.credits; }, 0);
+  var rows = cls.map(function(c,i){
+    var sc = c.status==='Registered'?'sb-g':c.status==='Waitlisted'?'sb-y':c.status==='Completed'?'sb-b':'sb-r';
+    var gradeCol = c.grade?'color:var(--grn);font-weight:700':'';
+    return '<tr>'+
+      '<td><strong>'+c.name+'</strong></td>'+
+      '<td>'+c.code+'</td>'+
+      '<td>'+c.credits+'</td>'+
+      '<td><input class="gi" value="'+c.grade+'" placeholder="—" style="'+gradeCol+'" onchange="upGrade(\''+sem+'\','+i+',this.value)" onfocus="this.style.color=\'\'"/></td>'+
+      '<td><span class="sb '+sc+'">'+c.status+'</span></td>'+
+      '<td><button class="del-b" onclick="rmCls(\''+sem+'\','+i+')">🗑</button></td>'+
+    '</tr>';
+  }).join('');
+  document.getElementById('semBody').innerHTML =
+    '<div class="card">'+
+      '<div class="ch"><div class="chi">📚</div>'+sem+
+        '<span style="font-size:11px;color:var(--txt3);font-weight:400;margin-left:4px">· WSU · '+tc+' credit hrs</span>'+
+      '</div>'+
+      (cls.length ?
+        '<table class="tbl"><thead><tr><th>Course</th><th>Code</th><th>Credits</th><th>Grade</th><th>Status</th><th></th></tr></thead><tbody>'+rows+'</tbody></table>'
+        : '<div style="color:var(--txt3);font-size:13px;padding:8px 0">No classes in this semester yet.</div>')+
+    '</div>';
+}
+function upGrade(sem,i,v){ S.semesters[sem][i].grade=v; save(); updateGPA(); }
+function rmCls(sem,i){ if(!confirm('Remove this class?')) return; S.semesters[sem].splice(i,1); save(); renderGrades(); }
+function addCls(){
+  var n=document.getElementById('nc-n').value.trim();
+  var c=document.getElementById('nc-c').value.trim();
+  var s=document.getElementById('nc-s').value;
+  var cr=parseInt(document.getElementById('nc-cr').value)||0;
+  var g=document.getElementById('nc-g').value.trim();
+  var st=document.getElementById('nc-st').value;
+  if(!n){ notify('Course name is required.'); return; }
+  if(!S.semesters[s]) S.semesters[s]=[];
+  S.semesters[s].push({name:n,code:c,credits:cr,grade:g,status:st});
+  save(); renderGrades();
+  notify((c||n)+' added to '+s+'!');
+  document.getElementById('nc-n').value='';
+  document.getElementById('nc-c').value='';
+  document.getElementById('nc-g').value='';
+}
+function newSem(){
+  var n=prompt('New semester name (e.g. Spring 2027):');
+  if(n && !S.semesters[n]){ S.semesters[n]=[]; save(); renderGrades(); }
+}
+
+// ── DASHBOARD ─────────────────────────────────────────────────
+var SCHED = [
+  {days:['Monday','Wednesday'],            t:'9:05–10:00 AM',  n:'Bio Anthropology', c:'ANTH 2100', col:'#5b21b6'},
+  {days:['Monday','Wednesday','Friday'],   t:'1:25–2:20 PM',   n:'Mobile App Dev',   c:'CS 3170',   col:'#d97706'},
+  {days:['Monday','Wednesday','Friday'],   t:'3:35–5:00 PM',   n:'Technical Comm.',  c:'EGR 3350',  col:'#059669'}
+];
+function renderDash(){
+  var days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  var today=days[new Date().getDay()];
+  var now=new Date();
+  var todayStr=now.toISOString().split('T')[0];
+  var EC={class:'#1976d2',work:'#059669',task:'#d97706',reminder:'#dc2626',other:'#5b21b6'};
+  var pm={high:'p-hi',med:'p-me',low:'p-lo'};
+
+  // ── TODAY: classes + events + tasks due today ──
+  var tc=SCHED.filter(function(c){ return c.days.includes(today); });
+  var te=S.events.filter(function(e){ return e.date===todayStr; });
+  var tt=S.tasks.filter(function(t){ return !t.done&&t.date&&t.date.split('T')[0]===todayStr; });
+  var h='';
+  if(!tc.length&&!te.length&&!tt.length)
+    h='<div style="font-size:13px;color:var(--txt3);padding:10px 0">Nothing scheduled for today.</div>';
+  tc.forEach(function(c){
+    h+='<div class="si"><div class="si-t">'+c.t+'</div><div class="si-bar" style="background:'+c.col+'"></div>'+
+       '<div><div class="si-n">'+c.n+'</div><div class="si-s">'+c.c+' · In-Person</div></div></div>';
+  });
+  te.forEach(function(e){
+    h+='<div class="si"><div class="si-t" style="font-size:9px;text-transform:uppercase;letter-spacing:.07em">'+e.type+'</div>'+
+       '<div class="si-bar" style="background:'+(EC[e.type]||'#5b21b6')+'"></div>'+
+       '<div><div class="si-n">'+e.name+'</div></div></div>';
+  });
+  tt.forEach(function(t){
+    h+='<div class="si"><div class="si-t" style="font-size:9px;text-transform:uppercase;letter-spacing:.07em;color:var(--ylw)">TASK DUE</div>'+
+       '<div class="si-bar" style="background:var(--ylw)"></div>'+
+       '<div><div class="si-n">'+t.name+'</div><div class="si-s '+(pm[t.priority]||'')+'">'+( t.course||'')+'</div></div></div>';
+  });
+  document.getElementById('todaySch').innerHTML=h;
+
+  // ── UPCOMING: tasks + events sorted by date ──
+  var upTasks=S.tasks.filter(function(t){ return !t.done&&t.date&&new Date(t.date)>now; })
+               .map(function(t){ return {sort:new Date(t.date),label:t.name,sub:(t.course?t.course+' · ':'')+'Due '+new Date(t.date).toLocaleDateString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}),color:'var(--ylw)',type:'task',priority:t.priority}; });
+  var upEvts=S.events.filter(function(e){ return e.date&&e.date>todayStr; })
+              .map(function(e){ return {sort:new Date(e.date+'T12:00'),label:e.name,sub:e.type.charAt(0).toUpperCase()+e.type.slice(1)+' · '+new Date(e.date+'T12:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}),color:EC[e.type]||'#5b21b6',type:e.type}; });
+  var all=[].concat(upTasks,upEvts).sort(function(a,b){ return a.sort-b.sort; }).slice(0,10);
+  var remH=all.length ? all.map(function(x){
+    return '<div class="ti">'+
+      '<div style="width:8px;height:8px;border-radius:50%;background:'+x.color+';flex-shrink:0;margin-top:5px"></div>'+
+      '<div style="flex:1"><div class="tn">'+x.label+'</div><div class="tm">'+x.sub+'</div></div>'+
+    '</div>';
+  }).join('') : '<div style="font-size:13px;color:var(--txt3);padding:10px 0">No upcoming events or tasks. 🎉</div>';
+  document.getElementById('upRem').innerHTML=remH;
+
+  document.getElementById('d-tasks').textContent=S.tasks.filter(function(t){ return !t.done; }).length;
+  renderWeekSum();
+  updateGPA();
+}
+function renderWeekSum(){
+  var now=new Date(), sw=new Date(now);
+  sw.setDate(now.getDate()-now.getDay()); sw.setHours(0,0,0,0);
+  var ws=S.shifts.filter(function(s){ return new Date(s.date)>=sw; });
+  var g=ws.reduce(function(a,s){ return a+s.hours*s.rate; },0);
+  var n=ws.reduce(function(a,s){ return a+s.hours*s.rate*(1-s.tax/100); },0);
+  var h=ws.reduce(function(a,s){ return a+s.hours; },0);
+  document.getElementById('d-earn').textContent='$'+n.toFixed(2);
+  document.getElementById('wkCards').innerHTML=
+    '<div class="metric m-gr"><div class="mv gr">$'+g.toFixed(2)+'</div><div class="ml">Gross Pay</div></div>'+
+    '<div class="metric m-bl"><div class="mv bl">$'+n.toFixed(2)+'</div><div class="ml">Net Pay</div></div>'+
+    '<div class="metric m-yl"><div class="mv yl">'+h+'h</div><div class="ml">Hours</div></div>';
+  var dnames=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], bh='';
+  var maxH=Math.max(8, Math.max.apply(null, ws.map(function(s){ return s.hours; }).concat([0])));
+  dnames.forEach(function(d,i){
+    var ds=ws.filter(function(s){ return new Date(s.date+'T12:00').getDay()===i; });
+    var dh=ds.reduce(function(a,s){ return a+s.hours; },0);
+    var de=ds.reduce(function(a,s){ return a+s.hours*s.rate*(1-s.tax/100); },0);
+    var pct=maxH>0?(dh/maxH*100):0;
+    bh+='<div class="wb-wrap">'+
+      '<div class="wb-lbl"><span>'+d+'</span><span style="color:var(--grn);font-weight:600">'+(dh>0?dh+'h · $'+de.toFixed(0):'—')+'</span></div>'+
+      '<div class="wb"><div class="wb-fill" style="width:'+pct+'%;background:linear-gradient(90deg,var(--blue),var(--blue-l))"></div></div>'+
+    '</div>';
+  });
+  document.getElementById('wkBars').innerHTML=bh;
+  var sm=S.studySessions.filter(function(s){ return new Date(s.date)>=sw; });
+  var smins=sm.reduce(function(a,s){ return a+s.mins; },0);
+  document.getElementById('d-study').textContent=Math.floor(smins/60)+'h';
+}
+
+// ── CALENDAR ──────────────────────────────────────────────────
+function renderCalendar(){
+  var y=calDate.getFullYear(), m=calDate.getMonth();
+  var MN=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('calLbl').textContent=MN[m]+' '+y;
+  var first=new Date(y,m,1).getDay(), total=new Date(y,m+1,0).getDate(), today=new Date();
+  var EC={class:'#1976d2',work:'#059669',task:'#d97706',reminder:'#dc2626',other:'#5b21b6'};
+  var DL=['Su','Mo','Tu','We','Th','Fr','Sa'];
+  var h=DL.map(function(d){ return '<div class="cal-dl">'+d+'</div>'; }).join('');
+  for(var i=0;i<first;i++) h+='<div class="cal-d other"></div>';
+  for(var d=1;d<=total;d++){
+    var ds=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    var evts=S.events.filter(function(e){ return e.date===ds; });
+    var isT=today.getDate()===d&&today.getMonth()===m&&today.getFullYear()===y;
+    var dots=evts.slice(0,4).map(function(e){ return '<div class="cal-dot" style="background:'+(EC[e.type]||'#5b21b6')+'"></div>'; }).join('');
+    h+='<div class="cal-d '+(isT?'today':'')+'" onclick="selDay(\''+ds+'\')"><span class="cal-dn">'+d+'</span><div class="cal-dots">'+dots+'</div></div>';
+  }
+  document.getElementById('calGrid').innerHTML=h;
+}
+function calMv(d){ calDate.setMonth(calDate.getMonth()+d); renderCalendar(); }
+function selDay(ds){
+  document.getElementById('eDt').value=ds;
+  document.getElementById('selDLbl').textContent=new Date(ds+'T12:00').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+  var evts=S.events.filter(function(e){ return e.date===ds; });
+  var EC={class:'#1976d2',work:'#059669',task:'#d97706',reminder:'#dc2626',other:'#5b21b6'};
+  document.getElementById('dayEvts').innerHTML=evts.length ?
+    evts.map(function(e){ return '<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--card-b)"><div style="width:8px;height:8px;border-radius:50%;background:'+(EC[e.type]||'#5b21b6')+'"></div><span style="font-size:13px">'+e.name+'</span><span style="font-size:10px;color:var(--txt3);margin-left:auto;text-transform:uppercase">'+e.type+'</span></div>'; }).join('')
+    : '<div style="color:var(--txt3)">No events on this day.</div>';
+}
+function addEvt(){
+  var n=document.getElementById('eNm').value.trim(), d=document.getElementById('eDt').value, t=document.getElementById('eTy').value;
+  if(!n||!d){ notify('Fill event name and date.'); return; }
+  S.events.push({name:n,date:d,type:t}); save(); renderCalendar();
+  document.getElementById('eNm').value=''; notify('Event added!');
+}
+
+// ── TASKS ─────────────────────────────────────────────────────
+function addTask(){
+  var n=document.getElementById('tNm').value.trim();
+  var d=document.getElementById('tDt').value;
+  var c=document.getElementById('tCr').value.trim();
+  var p=document.getElementById('tPr').value;
+  if(!n){ notify('Task name is required.'); return; }
+  S.tasks.push({id:Date.now(),name:n,date:d,course:c,priority:p,done:false});
+  if(d) S.events.push({name:n,date:d.split('T')[0],type:'task'});
+  save(); renderTasks(); updateBadge();
+  document.getElementById('tNm').value=''; notify('Task added!');
+}
+function renderTasks(){
+  var el=document.getElementById('taskList');
+  if(!S.tasks.length){ el.innerHTML='<div style="color:var(--txt3)">No tasks yet. Add one →</div>'; return; }
+  var pm={high:'p-hi',med:'p-me',low:'p-lo'};
+  el.innerHTML=S.tasks.map(function(t,i){
+    var d=t.date?new Date(t.date).toLocaleDateString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}):'';
+    return '<div class="ti">'+
+      '<div class="tchk '+(t.done?'done':'')+'" onclick="togTask('+i+')">'+(t.done?'✓':'')+'</div>'+
+      '<div style="flex:1"><div class="tn '+(t.done?'done':'')+'">'+t.name+'</div>'+
+      '<div class="tm '+(pm[t.priority]||'')+'">'+( t.course?t.course+' ':'')+(d?'· Due '+d:'')+'</div></div>'+
+      '<button class="del-b" onclick="rmTask('+i+')">🗑</button>'+
+    '</div>';
+  }).join('');
+}
+function togTask(i){ S.tasks[i].done=!S.tasks[i].done; save(); renderTasks(); updateBadge(); }
+function rmTask(i){ S.tasks.splice(i,1); save(); renderTasks(); updateBadge(); }
+function updateBadge(){
+  var n=S.tasks.filter(function(t){ return !t.done; }).length;
+  document.getElementById('tBadge').textContent=n;
+  var d=document.getElementById('d-tasks'); if(d) d.textContent=n;
+}
+
+// ── STUDY ─────────────────────────────────────────────────────
+function toggleStudy(){
+  if(!studyOn){
+    studyOn=true; studyStart=Date.now();
+    document.getElementById('studyBtn').textContent='⏹ Clock Out';
+    document.getElementById('studyBtn').className='btn b-rd';
+    document.getElementById('studySt').textContent='Currently studying...';
+    studyInt=setInterval(function(){
+      var e=Date.now()-studyStart;
+      var h=Math.floor(e/3600000), m=Math.floor((e%3600000)/60000), s=Math.floor((e%60000)/1000);
+      document.getElementById('studyClk').textContent=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+    },1000);
+  } else {
+    clearInterval(studyInt); studyOn=false;
+    var mins=Math.round((Date.now()-studyStart)/60000);
+    var course=document.getElementById('studySel').value;
+    S.studySessions.push({course:course,mins:mins,date:new Date().toISOString()});
+    save();
+    document.getElementById('studyBtn').textContent='▶ Clock In';
+    document.getElementById('studyBtn').className='btn b-gr';
+    document.getElementById('studySt').textContent='Not studying';
+    document.getElementById('studyClk').textContent='00:00:00';
+    renderStudyLog(); notify('Session: '+mins+' min logged!');
+  }
+}
+function renderStudyLog(){
+  var now=new Date(), sw=new Date(now);
+  sw.setDate(now.getDate()-now.getDay()); sw.setHours(0,0,0,0);
+  var wk=S.studySessions.filter(function(s){ return new Date(s.date)>=sw; });
+  var tot=wk.reduce(function(a,s){ return a+s.mins; },0);
+  document.getElementById('studyTot').textContent=Math.floor(tot/60)+'h '+tot%60+'m';
+  var el=document.getElementById('studyLog');
+  if(!wk.length){ el.innerHTML='<div style="color:var(--txt3)">No sessions this week yet.</div>'; return; }
+  el.innerHTML=wk.map(function(s){
+    var d=new Date(s.date).toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+    return '<div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--card-b)">'+
+      '<div><div style="font-size:13px;font-weight:500">'+s.course.split('—')[0].trim()+'</div>'+
+      '<div style="font-size:11px;color:var(--txt3)">'+d+'</div></div>'+
+      '<div style="font-family:\'Syne\',sans-serif;font-weight:700;color:var(--blue)">'+Math.floor(s.mins/60)+'h '+s.mins%60+'m</div>'+
+    '</div>';
+  }).join('');
+}
+
+// ── WORK & EARNINGS ───────────────────────────────────────────
+function calcPrev(){
+  var h=parseFloat(document.getElementById('sHrs').value)||0;
+  var r=parseFloat(document.getElementById('sRate').value)||0;
+  var t=parseFloat(document.getElementById('sTax').value)||0;
+  var g=h*r, tx=g*(t/100), n=g-tx, netHr=r*(1-t/100);
+  var set=function(id,v){ var e=document.getElementById(id); if(e) e.textContent=v; };
+  set('pGross','$'+g.toFixed(2));
+  set('pTax','-$'+tx.toFixed(2));
+  set('pNet','$'+n.toFixed(2));
+  if(r>0){
+    set('perHour','$'+netHr.toFixed(2)+'/hr');
+    set('perDay','$'+(netHr*8).toFixed(2));
+    set('perWeek','$'+(netHr*40).toFixed(2));
+    set('perMonth','$'+(netHr*173).toFixed(2));
+  } else {
+    ['perHour','perDay','perWeek','perMonth'].forEach(function(id){ set(id,'—'); });
+  }
+  var el=document.getElementById('pNet');
+  if(el&&h>0){ el.style.transform='scale(1.08)'; setTimeout(function(){ el.style.transform='scale(1)'; },150); }
+}
+function syncRate(){
+  var i=parseInt(document.getElementById('sJob').value);
+  if(S.jobs[i]){
+    document.getElementById('sRate').value=S.jobs[i].rate;
+    if(S.jobs[i].tax) document.getElementById('sTax').value=S.jobs[i].tax;
+  }
+  calcPrev();
+}
+function logShift(){
+  var ji=parseInt(document.getElementById('sJob').value);
+  var d=document.getElementById('sDt').value;
+  var h=parseFloat(document.getElementById('sHrs').value);
+  var r=parseFloat(document.getElementById('sRate').value)||11;
+  var t=parseFloat(document.getElementById('sTax').value)||15;
+  if(!d||!h){ notify('Fill date and hours first.'); return; }
+  S.shifts.push({job:S.jobs[ji]?S.jobs[ji].title:'Unknown',date:d,hours:h,rate:r,tax:t,id:Date.now()});
+  S.events.push({name:'Work: '+(S.jobs[ji]?S.jobs[ji].title:'Shift')+' ('+h+'h)',date:d,type:'work'});
+  save(); renderShifts(); updateWork(); renderCalendar();
+  document.getElementById('sHrs').value=''; calcPrev();
+  notify('Shift logged! Net: $'+(h*r*(1-t/100)).toFixed(2));
+}
+function renderShifts(){
+  var el=document.getElementById('shiftList');
+  if(!S.shifts.length){ el.innerHTML='<div style="color:var(--txt3);font-size:13px;padding:10px 0">No shifts logged yet.</div>'; return; }
+  el.innerHTML=[].concat(S.shifts).reverse().map(function(s,ri){
+    var i=S.shifts.length-1-ri;
+    var g=(s.hours*s.rate).toFixed(2), n=(s.hours*s.rate*(1-s.tax/100)).toFixed(2);
+    var d=new Date(s.date+'T12:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+    return '<div class="shr">'+
+      '<div><div class="sj">'+s.job+'</div><div class="sd">'+d+' · '+s.hours+'h @ $'+s.rate+'/hr · tax '+s.tax+'%</div></div>'+
+      '<div style="text-align:right"><div class="sp">$'+n+'</div><div style="font-size:10px;color:var(--txt3)">Gross $'+g+'</div></div>'+
+      '<button class="del-b" onclick="rmShift('+i+')">🗑</button>'+
+    '</div>';
+  }).join('');
+}
+function rmShift(i){ S.shifts.splice(i,1); save(); renderShifts(); updateWork(); }
+function updateWork(){
+  var now=new Date(), sw=new Date(now);
+  sw.setDate(now.getDate()-now.getDay()); sw.setHours(0,0,0,0);
+  var ws=S.shifts.filter(function(s){ return new Date(s.date)>=sw; });
+  var g=ws.reduce(function(a,s){ return a+s.hours*s.rate; },0);
+  var n=ws.reduce(function(a,s){ return a+s.hours*s.rate*(1-s.tax/100); },0);
+  var h=ws.reduce(function(a,s){ return a+s.hours; },0);
+  var set=function(id,v){ var e=document.getElementById(id); if(e) e.textContent=v; };
+  set('w-gross','$'+g.toFixed(2)); set('w-net','$'+n.toFixed(2));
+  set('w-hrs',h+'h'); set('w-tax','$'+(g-n).toFixed(2));
+  set('d-earn','$'+n.toFixed(2));
+}
+function renderJobList(){
+  var el=document.getElementById('jobList'); if(!el) return;
+  if(!S.jobs.length){ el.innerHTML='<div style="color:var(--txt3);font-size:12px">No jobs yet.</div>'; return; }
+  el.innerHTML=S.jobs.map(function(j,i){
+    return '<div style="display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--card-b)">'+
+      '<div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--txt)">'+j.title+'</div>'+
+      '<div style="font-size:11px;color:var(--grn);font-weight:600">$'+parseFloat(j.rate).toFixed(2)+'/hr'+(j.tax?' · '+j.tax+'% tax':'')+'</div></div>'+
+      '<button onclick="editJob('+i+')" style="background:var(--blue-g);border:1px solid rgba(25,118,210,.2);color:var(--blue);border-radius:7px;font-size:11px;padding:4px 10px;cursor:pointer;font-family:inherit;font-weight:600">Edit</button>'+
+      (i>0?'<button onclick="removeJob('+i+')" class="del-b">🗑</button>':'')+
+    '</div>';
+  }).join('');
+  var sel=document.getElementById('sJob'); if(!sel) return;
+  var cur=parseInt(sel.value)||0;
+  sel.innerHTML=S.jobs.map(function(j,i){ return '<option value="'+i+'">'+j.title+' — $'+parseFloat(j.rate).toFixed(2)+'/hr</option>'; }).join('');
+  if(cur<S.jobs.length) sel.value=cur;
+}
+function editJob(i){
+  var newRate=prompt('New pay rate for '+S.jobs[i].title+' (current: $'+S.jobs[i].rate+'):');
+  if(newRate===null) return;
+  var r=parseFloat(newRate);
+  if(isNaN(r)||r<=0){ notify('Invalid rate.'); return; }
+  S.jobs[i].rate=r; save(); renderJobList(); syncRate(); notify('Updated to $'+r.toFixed(2)+'/hr ✓');
+}
+function removeJob(i){
+  if(!confirm('Remove "'+S.jobs[i].title+'"? Logged shifts are kept.')) return;
+  S.jobs.splice(i,1); save(); renderJobList(); notify('Job removed.');
+}
+function addJob(){
+  var t=document.getElementById('njT').value.trim();
+  var r=parseFloat(document.getElementById('njR').value);
+  var taxEl=document.getElementById('njTax');
+  var tax=taxEl?parseFloat(taxEl.value)||15:15;
+  if(!t){ notify('Enter a job title.'); return; }
+  if(!r||r<=0){ notify('Enter a valid pay rate.'); return; }
+  S.jobs.push({title:t,rate:r,tax:tax}); save(); renderJobList();
+  document.getElementById('njT').value='';
+  document.getElementById('njR').value='';
+  if(taxEl) taxEl.value='15';
+  notify(t+' added at $'+r.toFixed(2)+'/hr!');
+}
+
+// ── NOTIFY ────────────────────────────────────────────────────
+function notify(msg){
+  var el=document.getElementById('notifPop');
+  el.textContent='✓ '+msg; el.style.display='block';
+  setTimeout(function(){ el.style.display='none'; },3200);
+}
+
+// ── SPOTIFY PLAYER ────────────────────────────────────────────
+var PLAYLISTS = {
+  1: 'playlist/6Zc9mti0fN8vjiXDMVlNdo',
+  2: 'playlist/6x9TYXQhAwhSLCqx0vFqZw'
+};
+var activePl = 1;
+function toggleMusic(){
+  musicOpen=!musicOpen;
+  document.getElementById('musicPanel').style.display=musicOpen?'block':'none';
+}
+function switchPlaylist(n){
+  activePl = n;
+  document.getElementById('spFrame').src =
+    'https://open.spotify.com/embed/'+PLAYLISTS[n]+'?utm_source=generator&theme=0';
+  var on  = 'background:#1db954;border:none;color:#000;border-radius:7px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit';
+  var off = 'flex:1;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:#bbb;border-radius:7px;padding:6px 10px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit';
+  document.getElementById('pl1-btn').style.cssText = (n===1?'flex:1;'+on:off);
+  document.getElementById('pl2-btn').style.cssText = (n===2?'flex:1;'+on:off);
+}
+</script>
+</body>
+</html>
