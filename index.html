@@ -410,7 +410,7 @@ select option{background:var(--bg)}
     <tbody>
       <tr><td><strong>Digital Forensics</strong></td><td>CEG 3410</td><td>Online</td><td>Dakota Johnson</td><td>88744</td></tr>
       <tr><td><strong>Bio Anthropology Lab</strong></td><td>ANTH 2100L</td><td>Online</td><td>Lynsey Vlasek</td><td>82292</td></tr>
-      <tr><td><strong>Statistical Concepts</strong></td><td>STT 1600</td><td>Online</td><td>TBA</td><td>89567</td></tr>
+      <tr><td><strong>Statistical Concepts</strong></td><td>STT 1600</td><td>Online</td><td>Oluwagbenga Agboola</td><td>89567</td></tr>
       <tr><td><strong>Technology and Society</strong></td><td>CS 1000</td><td>Online</td><td>Brent Richter</td><td>84648</td></tr>
     </tbody></table>
   </div>
@@ -604,25 +604,29 @@ select option{background:var(--bg)}
 
 <div id="musicPanel">
   <!-- Header -->
-  <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#1a1a1a;border-bottom:1px solid rgba(255,255,255,.08)">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px;background:#1a1a1a;border-bottom:1px solid rgba(255,255,255,.08)">
     <div style="display:flex;align-items:center;gap:8px">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="#1db954"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="#1db954"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
       <span style="font-size:11px;font-weight:700;color:#fff;letter-spacing:.08em">SPOTIFY</span>
     </div>
-    <button onclick="toggleMusic()" style="background:none;border:none;color:#888;cursor:pointer;font-size:18px;line-height:1;padding:0 2px">✕</button>
+    <div style="display:flex;align-items:center;gap:5px">
+      <button onclick="minimizeMusic()" id="minBtn" title="Minimize" style="background:rgba(255,255,255,.1);border:none;color:#ddd;cursor:pointer;width:26px;height:26px;border-radius:50%;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;line-height:1">&#8722;</button>
+      <button onclick="toggleMusic()" title="Close" style="background:rgba(255,255,255,.1);border:none;color:#ddd;cursor:pointer;width:26px;height:26px;border-radius:50%;font-size:13px;display:flex;align-items:center;justify-content:center">&#10005;</button>
+    </div>
   </div>
-  <!-- Playlist switcher -->
-  <div style="padding:8px 12px;background:#181818;display:flex;gap:6px;border-bottom:1px solid rgba(255,255,255,.06)">
-    <button onclick="switchPlaylist(1)" id="pl1-btn" style="flex:1;background:#1db954;border:none;color:#000;border-radius:7px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">▶ Playlist 1</button>
-    <button onclick="switchPlaylist(2)" id="pl2-btn" style="flex:1;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:#bbb;border-radius:7px;padding:6px 10px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit">Playlist 2</button>
+  <!-- Collapsible body -->
+  <div id="musicBody">
+    <div style="padding:8px 12px;background:#181818;display:flex;gap:6px;border-bottom:1px solid rgba(255,255,255,.06)">
+      <button onclick="switchPlaylist(1)" id="pl1-btn" style="flex:1;background:#1db954;border:none;color:#000;border-radius:7px;padding:7px 10px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .18s">&#9654; Playlist 1</button>
+      <button onclick="switchPlaylist(2)" id="pl2-btn" style="flex:1;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);color:#bbb;border-radius:7px;padding:7px 10px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .18s">Playlist 2</button>
+    </div>
+    <iframe id="spFrame"
+      src="https://open.spotify.com/embed/playlist/6Zc9mti0fN8vjiXDMVlNdo?utm_source=generator&theme=0"
+      width="340" height="380" frameborder="0"
+      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+      style="display:block;border:none">
+    </iframe>
   </div>
-  <!-- Embed -->
-  <iframe id="spFrame"
-    src="https://open.spotify.com/embed/playlist/6Zc9mti0fN8vjiXDMVlNdo?utm_source=generator&theme=0"
-    width="340" height="380" frameborder="0"
-    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-    style="display:block;border:none">
-  </iframe>
 </div>
 
 <!-- ════════════════════════════════════════
@@ -1128,19 +1132,25 @@ var PLAYLISTS = {
   1: 'playlist/6Zc9mti0fN8vjiXDMVlNdo',
   2: 'playlist/6x9TYXQhAwhSLCqx0vFqZw'
 };
-var activePl = 1;
+var activePl = 1, musicMin = false;
 function toggleMusic(){
-  musicOpen=!musicOpen;
-  document.getElementById('musicPanel').style.display=musicOpen?'block':'none';
+  musicOpen = !musicOpen;
+  document.getElementById('musicPanel').style.display = musicOpen ? 'block' : 'none';
+  if(musicOpen){ musicMin=false; document.getElementById('musicBody').style.display='block'; document.getElementById('minBtn').innerHTML='&#8722;'; }
+}
+function minimizeMusic(){
+  musicMin = !musicMin;
+  document.getElementById('musicBody').style.display = musicMin ? 'none' : 'block';
+  document.getElementById('minBtn').innerHTML = musicMin ? '&#9650;' : '&#8722;';
 }
 function switchPlaylist(n){
   activePl = n;
   document.getElementById('spFrame').src =
     'https://open.spotify.com/embed/'+PLAYLISTS[n]+'?utm_source=generator&theme=0';
-  var on  = 'background:#1db954;border:none;color:#000;border-radius:7px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit';
-  var off = 'flex:1;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:#bbb;border-radius:7px;padding:6px 10px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit';
-  document.getElementById('pl1-btn').style.cssText = (n===1?'flex:1;'+on:off);
-  document.getElementById('pl2-btn').style.cssText = (n===2?'flex:1;'+on:off);
+  var onStyle  = 'flex:1;background:#1db954;border:none;color:#000;border-radius:7px;padding:7px 10px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .18s';
+  var offStyle = 'flex:1;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);color:#bbb;border-radius:7px;padding:7px 10px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .18s';
+  document.getElementById('pl1-btn').style.cssText = n===1 ? onStyle : offStyle;
+  document.getElementById('pl2-btn').style.cssText = n===2 ? onStyle : offStyle;
 }
 </script>
 </body>
